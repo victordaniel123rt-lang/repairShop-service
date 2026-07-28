@@ -13,12 +13,14 @@ import java.math.BigDecimal;
 @Builder
 public class DetalleOrden {
 
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private Integer cantidad;
     private BigDecimal subtotal;
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "ordenServicio_id")
-    private OrderServicio orden;
+    private OrderServicio ordenServicio;
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "servicio_id")
     private Servicio servicio;

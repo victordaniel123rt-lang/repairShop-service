@@ -4,6 +4,7 @@ import com.vdgarcia.repairShop_service.model.dto.AgregarServicioDTO;
 import com.vdgarcia.repairShop_service.model.dto.CambiarEstadoDTO;
 import com.vdgarcia.repairShop_service.model.dto.OrdenServicioDTO;
 import com.vdgarcia.repairShop_service.model.entity.*;
+import com.vdgarcia.repairShop_service.model.enums.Estado;
 import com.vdgarcia.repairShop_service.repository.DetalleOrdenRepository;
 import com.vdgarcia.repairShop_service.repository.OrdenRepository;
 import com.vdgarcia.repairShop_service.repository.ServicioRepository;
@@ -76,7 +77,7 @@ public class OrdenServicioImpl implements OrdenServicioService {
         Servicio servicio = servicioRepository.findById(dto.getIdServicio()).orElseThrow(
                 () -> new IllegalArgumentException("Servicio no encontrado")
         );
-        Optional<DetalleOrden> existe = detalleOrdenRepository.findByOrdenIdAndServicioId(id, dto.getIdServicio());
+        Optional<DetalleOrden> existe = detalleOrdenRepository.findByOrdenServicioIdAndServicioId(id, dto.getIdServicio());
         if (existe.isPresent()) {
             DetalleOrden detalle = existe.get();
             detalle.setCantidad(detalle.getCantidad() + dto.getCantidad());
@@ -87,12 +88,12 @@ public class OrdenServicioImpl implements OrdenServicioService {
             DetalleOrden detalle = DetalleOrden.builder()
                     .cantidad(dto.getCantidad())
                     .subtotal(servicio.getPrecioBase().multiply(BigDecimal.valueOf(dto.getCantidad())))
-                    .orden(orden)
+                    .ordenServicio(orden)
                     .servicio(servicio)
                     .build();
             detalleOrdenRepository.save(detalle);
         }
-        subtotal = detalleOrdenRepository.findAllByOrdenId(id).stream().map(DetalleOrden::getSubtotal).reduce(BigDecimal.ZERO, BigDecimal::add);
+        subtotal = detalleOrdenRepository.findAllByOrdenServicioId(id).stream().map(DetalleOrden::getSubtotal).reduce(BigDecimal.ZERO, BigDecimal::add);
         if(subtotal.compareTo(BigDecimal.valueOf(20000))>0){
             subtotal = subtotal.subtract(subtotal.multiply(DESCUENTO));
         }
@@ -111,7 +112,7 @@ public class OrdenServicioImpl implements OrdenServicioService {
         );
         Estado estado = orden.getEstado();
         if(dto.getNuevoEstado() == Estado.ENTREGADA
-                && detalleOrdenRepository.findAllByOrdenId(id).isEmpty()){
+                && detalleOrdenRepository.findAllByOrdenServicioId(id).isEmpty()){
 
             throw new IllegalArgumentException(
                     "No se puede entregar una orden sin servicios");

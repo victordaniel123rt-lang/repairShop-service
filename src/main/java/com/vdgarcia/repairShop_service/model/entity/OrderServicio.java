@@ -1,5 +1,6 @@
 package com.vdgarcia.repairShop_service.model.entity;
 
+import com.vdgarcia.repairShop_service.model.enums.Estado;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -13,10 +14,12 @@ import java.util.List;
 @NoArgsConstructor @AllArgsConstructor
 @Builder
 public class OrderServicio {
-
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private LocalDate fechaIngreso;
     private LocalDate fechaEntrega;
+    @Enumerated(EnumType.STRING)
     private Estado estado;
     private BigDecimal subtotal;
     private BigDecimal iva;

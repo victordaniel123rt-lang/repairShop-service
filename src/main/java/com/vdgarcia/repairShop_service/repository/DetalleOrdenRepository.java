@@ -8,6 +8,6 @@ import java.util.Optional;
 
 public interface DetalleOrdenRepository extends JpaRepository<DetalleOrden, Long> {
 
-    Optional<DetalleOrden> findByOrdenIdAndServicioId(Long idOrden,Long servicioId);
-    List<DetalleOrden> findAllByOrdenId(Long id);
+    Optional<DetalleOrden> findByOrdenServicioIdAndServicioId(Long idOrden,Long servicioId);
+    List<DetalleOrden> findAllByOrdenServicioId(Long id);
 }

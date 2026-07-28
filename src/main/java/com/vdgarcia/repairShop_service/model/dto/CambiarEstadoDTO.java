@@ -1,6 +1,6 @@
 package com.vdgarcia.repairShop_service.model.dto;
 
-import com.vdgarcia.repairShop_service.model.entity.Estado;
+import com.vdgarcia.repairShop_service.model.enums.Estado;
 import lombok.*;
 
 @Getter @Setter

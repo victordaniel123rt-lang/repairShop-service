@@ -55,7 +55,7 @@ public class Mapper {
                 .subtotal(entity.getSubtotal())
                 .cantidad(entity.getCantidad())
                 .servicio(entity.getServicio().getId())
-                .orden(entity.getOrden().getId())
+                .orden(entity.getOrdenServicio().getId())
                 .build();
     }
 
@@ -125,7 +125,7 @@ public class Mapper {
                 .subtotal(dto.getSubtotal())
                 .cantidad(dto.getCantidad())
                 .servicio(Servicio.builder().id(dto.getServicio()).build())
-                .orden(OrderServicio.builder().id(dto.getOrden()).build())
+                .ordenServicio(OrderServicio.builder().id(dto.getOrden()).build())
                 .build();
     }
 

@@ -11,7 +11,8 @@ import java.util.List;
 @AllArgsConstructor @NoArgsConstructor
 @Builder
 public class Vehiculo {
-
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String placa;
     private Integer anio;
