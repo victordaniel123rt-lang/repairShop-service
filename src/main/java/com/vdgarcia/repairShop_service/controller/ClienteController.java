@@ -22,7 +22,7 @@ public class ClienteController {
     @GetMapping
     @Operation(summary = "Listar todos los clientes", description = "Muestra todos los clientes que existen hasta el momento de la consulta")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Lista desplegada con exito"),
+            @ApiResponse(responseCode = "200", description = "Lista desplegada con éxito"),
             @ApiResponse(responseCode = "400", description = "Datos de entrada inválidos o inconsistentes")
     })
     public ResponseEntity<List<ClienteDTO>> obtenerTodos(){
