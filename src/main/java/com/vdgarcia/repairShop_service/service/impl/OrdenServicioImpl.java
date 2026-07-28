@@ -48,13 +48,25 @@ public class OrdenServicioImpl implements OrdenServicioService {
 
     @Override
     public OrdenServicioDTO crear(OrdenServicioDTO dto) {
-        Vehiculo vehiculo = Mapper.tovehiculo(vehiculoService.obtenerPorId(dto.getVehiculo()));
-        Optional<OrderServicio> optional = vehiculo.getOrdenes().stream().findAny();
+      //  Vehiculo vehiculo = Mapper.tovehiculo(vehiculoService.obtenerPorId(dto.getVehiculo()));
+        Optional<OrderServicio> optional = repository.findFirstByVehiculoIdAndEstadoIn(
+                dto.getVehiculo(),
+                List.of(
+                        Estado.RECIBIDA,
+                        Estado.DIAGNOSTICO,
+                        Estado.EN_REPARACION,
+                        Estado.LISTA
+                )
+        );
         if(optional.isPresent()){
             OrderServicio orden = optional.get();
             throw  new IllegalArgumentException("El vehículo cuente actualmente con una orden activa en estado: " + orden.getEstado());
         }
         OrderServicio orden = Mapper.toOrdenServicio(dto);
+        orden.setEstado(Estado.RECIBIDA);
+        orden.setSubtotal(BigDecimal.valueOf(0.00));
+        orden.setIva(BigDecimal.valueOf(0.00));
+        orden.setTotal(BigDecimal.valueOf(0.00));
         OrderServicio creada = repository.save(orden);
         log.info("La orden ha sido creada de manera exitosa {}", creada.getId());
         return Mapper.toordenServicioDTO(creada);

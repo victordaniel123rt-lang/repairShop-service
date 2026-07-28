@@ -9,11 +9,11 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class VehiculoDTO {
-    private Long id;
-    private String placa;
-    private Integer anio;
-    private Long kilometraje;
-    private Long cliente;
-    private List<OrdenServicioDTO> ordenes;
-}
+    public class VehiculoDTO {
+        private Long id;
+        private String placa;
+        private Integer anio;
+        private Long kilometraje;
+        private Long cliente;
+        private List<OrdenServicioDTO> ordenes;
+    }
