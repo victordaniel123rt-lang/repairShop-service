@@ -1,0 +1,36 @@
+services:
+  # Servicio 1: El contenedor de MariaDB
+  base-datos:
+    image: mariadb:10.11
+    container_name: mariadb-repair
+    environment:
+      MARIADB_ROOT_PASSWORD: "1469370"
+      MARIADB_DATABASE: taller
+    ports:
+      - "3308:3306"
+    volumes:
+      - mariadb_data:/var/lib/mysql
+    # Control de salud simplificado y compatible
+    healthcheck:
+      test: ["CMD-SHELL", "mariadb-admin ping -h localhost -p$$MARIADB_ROOT_PASSWORD || exit 1"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  # Servicio 2: aplicación Spring Boot
+  app-web:
+    build: .
+    container_name: repairShop
+    ports:
+      - "8081:8080"
+    depends_on:
+      base-datos:
+        condition: service_healthy
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:mariadb://base-datos:3306/taller
+      SPRING_DATASOURCE_USERNAME: root
+      SPRING_DATASOURCE_PASSWORD: "1469370"
+      SPRING_JPA_HIBERNATE_DDL_AUTO: update
+
+volumes:
+  mariadb_data:
