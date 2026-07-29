@@ -4,6 +4,7 @@ import com.vdgarcia.repairShop_service.mapper.Mapper;
 import com.vdgarcia.repairShop_service.model.dto.VehiculoDTO;
 import com.vdgarcia.repairShop_service.model.entity.Cliente;
 import com.vdgarcia.repairShop_service.model.entity.Vehiculo;
+import com.vdgarcia.repairShop_service.repository.ClienteRepository;
 import com.vdgarcia.repairShop_service.repository.VehiculoRepository;
 import com.vdgarcia.repairShop_service.service.intef.ClienteService;
 import com.vdgarcia.repairShop_service.service.intef.VehiculoService;
@@ -18,6 +19,7 @@ import java.util.List;
 public class VehiculoServiceImpl implements VehiculoService {
 
     private final VehiculoRepository repository;
+    private final ClienteRepository clienteRepository;
     private final ClienteService service;
 
     @Override
@@ -35,7 +37,9 @@ public class VehiculoServiceImpl implements VehiculoService {
 
     @Override
     public List<VehiculoDTO> obtenerPorCliente(Long id) {
-        Cliente cliente = Mapper.toCliente(service.obtenerPorId(id));
+        Cliente cliente = clienteRepository.findById(1L).orElseThrow(
+                ()->new IllegalArgumentException("Cliente no encontrado")
+        );
         return cliente.getVehiculos().stream().map(Mapper::tovehiculoDTO).toList();
     }
 
