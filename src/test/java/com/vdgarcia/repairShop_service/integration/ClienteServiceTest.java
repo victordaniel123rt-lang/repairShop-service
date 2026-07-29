@@ -78,6 +78,36 @@ void testBuscarPorId_Found(){
     }
 
 
+    @Test
+    void testActualizar_Found(){
+        List<Vehiculo> lista = new ArrayList<>();
+        List<VehiculoDTO> listaDTO = new ArrayList<>();
+        Cliente cliente = new Cliente(1L,"Victor","Garcia", "7226435218", "vd@example.com", lista);
+        ClienteDTO clienteDTO = new ClienteDTO(null,"Victor","Elacio", "7226435225", "vg@example.com", listaDTO);
+        Cliente cliente2 = new Cliente(1L,"Victor","Elacio", "7226435225", "vg@example.com", lista);
+        when(this.repository.findById(1L)).thenReturn(Optional.of(cliente));
+        when(this.repository.save(any(Cliente.class))).thenReturn(cliente2);
+        ClienteDTO dto = this.service.actualizar(1L, clienteDTO);
+        assertNotNull(dto);
+        assertEquals("Elacio",dto.getApellido());
+        assertEquals("7226435225",dto.getTelefono());
+        verify(this.repository,times(1)).findById(1L);
+        verify(this.repository,times(1)).save(any(Cliente.class));
+
+    }
+
+
+    @Test
+    void testActualizar_NotFound(){
+        List<VehiculoDTO> listaDTO = new ArrayList<>();
+        ClienteDTO clienteDTO = new ClienteDTO(null,"Victor","Elacio", "7226435225", "vg@example.com", listaDTO);
+    when(this.repository.findById(1L)).thenReturn(Optional.empty());
+    RuntimeException exception = assertThrows(RuntimeException.class, ()-> this.service.actualizar(1L, clienteDTO));
+    assertEquals("Cliente no encontrado", exception.getMessage());
+    verify(this.repository,times(1)).findById(1L);
+    }
+
+
 
 
 
