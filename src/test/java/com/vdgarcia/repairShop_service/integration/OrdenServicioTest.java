@@ -1,6 +1,5 @@
 package com.vdgarcia.repairShop_service.integration;
 
-import com.vdgarcia.repairShop_service.mapper.Mapper;
 import com.vdgarcia.repairShop_service.model.dto.AgregarServicioDTO;
 import com.vdgarcia.repairShop_service.model.dto.CambiarEstadoDTO;
 import com.vdgarcia.repairShop_service.model.dto.DetalleOrdenDTO;
@@ -313,6 +312,28 @@ public class OrdenServicioTest {
         verify(this.repository,times(1)).findById(1L);
         verify(this.detalleOrdenRepository,times(1)).findAllByOrdenServicioId(1L);
     }
+
+
+
+    @Test
+    void testCambiarEstado_ThirdException(){
+        Servicio servicio1 = new Servicio(1L,"Agregar diesel",BigDecimal.valueOf(150),1, new ArrayList<>());
+        Vehiculo vehiculo = new Vehiculo(1L,"ABC-123-A",2005,1658L,new Cliente(),new ArrayList<>());
+        DateTimeFormatter formato = DateTimeFormatter.ofPattern("dd-MM-yy");
+        LocalDate fechaIngreso = LocalDate.parse("15-07-26",formato);
+        LocalDate fechaSalida = LocalDate.parse("25-07-26",formato);
+        OrderServicio servicio =  new OrderServicio(1L,fechaIngreso,fechaSalida, Estado.RECIBIDA, BigDecimal.valueOf(450),
+                BigDecimal.valueOf(0.16),BigDecimal.valueOf(550),vehiculo,new ArrayList<>());
+        when(this.repository.findById(1L)).thenReturn(Optional.of(servicio));
+        DetalleOrden detalleOrden = new DetalleOrden(1L,2,BigDecimal.valueOf(300),servicio,servicio1);
+        List<DetalleOrden> lista = new ArrayList<>();
+        lista.add(detalleOrden);
+        CambiarEstadoDTO cambiarEstadoDTO = new CambiarEstadoDTO(Estado.EN_REPARACION);
+        RuntimeException exception = assertThrows(RuntimeException.class, ()-> this.servicio.cambiarEstado(1L, cambiarEstadoDTO));
+        assertEquals("Transición invalida: No se puede pasar de " + Estado.RECIBIDA + " a " + Estado.EN_REPARACION, exception.getMessage());
+        verify(this.repository,times(1)).findById(1L);
+    }
+
 
 
 
