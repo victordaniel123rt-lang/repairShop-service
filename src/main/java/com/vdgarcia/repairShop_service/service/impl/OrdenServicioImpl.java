@@ -125,16 +125,13 @@ public class OrdenServicioImpl implements OrdenServicioService {
         Estado estado = orden.getEstado();
         if(dto.getNuevoEstado() == Estado.ENTREGADA
                 && detalleOrdenRepository.findAllByOrdenServicioId(id).isEmpty()){
-
             throw new IllegalArgumentException(
                     "No se puede entregar una orden sin servicios");
         }
         if(!estado.puedeTransicionarA(dto.getNuevoEstado())){
             throw new IllegalArgumentException(String.format("Transición invalida: No se puede pasar de %s a %s", estado, dto.getNuevoEstado()));
         }
-
         orden.setEstado(dto.getNuevoEstado());
-        repository.save(orden);
         OrderServicio guardado = repository.save(orden);
         return Mapper.toordenServicioDTO(guardado);
     }
