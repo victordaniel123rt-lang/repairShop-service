@@ -28,15 +28,12 @@ public class ClienteServiceTest {
         assertEquals("Carlos", dto.getNombre());
 
     }
-
     @Test
     @Transactional
     void testBuscarPorId_NotFound(){
         RuntimeException exception = assertThrows(RuntimeException.class, ()-> this.service.obtenerPorId(6L));
         assertEquals("Cliente no encontrado", exception.getMessage());
     }
-
-
     @Test
     @Transactional
     void testObtenerTodos(){
@@ -44,7 +41,6 @@ public class ClienteServiceTest {
         assertNotNull(clientes);
         assertEquals(3,clientes.size());
     }
-
     @Test
     @Transactional
     void testCrear(){
@@ -54,16 +50,42 @@ public class ClienteServiceTest {
         assertEquals("Agustin", clienteDTO.getNombre());
         assertTrue(clienteDTO.getId()>0);
     }
-
     @Test
     @Transactional
-    void tesActualizar(){
+    void testActualizar(){
         ClienteDTO dto = new ClienteDTO(1L, "Carlos Javier", "Ramirez", "5544455566", "carlos.ramirez@empresa.com", new ArrayList<>());
         ClienteDTO actualizado = this.service.actualizar(1L,dto);
         assertNotNull(actualizado);
         assertEquals("Carlos Javier", actualizado.getNombre());
         assertEquals("Ramirez", actualizado.getApellido());
     }
+
+    @Test
+    @Transactional
+    void testActualizar_NotFound(){
+        ClienteDTO dto = new ClienteDTO(1L, "Carlos Javier", "Ramirez", "5544455566", "carlos.ramirez@empresa.com", new ArrayList<>());
+        RuntimeException exception = assertThrows(RuntimeException.class, ()-> this.service.actualizar(8L,dto));
+        assertEquals("Cliente no encontrado", exception.getMessage());
+    }
+
+
+    @Test
+    @Transactional
+    void testEliminar(){
+        ClienteDTO dto = this.service.eliminar(1L);
+        assertNotNull(dto);
+        assertEquals("Carlos", dto.getNombre());
+    }
+
+
+    @Test
+    @Transactional
+    void testEliminar_NotFound(){
+        RuntimeException exception = assertThrows(RuntimeException.class, ()-> this.service.eliminar(8L));
+        assertEquals("Cliente no encontrado", exception.getMessage());
+    }
+
+
 
 
 
