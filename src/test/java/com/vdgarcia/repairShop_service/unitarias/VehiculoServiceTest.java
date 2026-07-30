@@ -1,8 +1,6 @@
-package com.vdgarcia.repairShop_service.integration;
+package com.vdgarcia.repairShop_service.unitarias;
 
 
-import com.vdgarcia.repairShop_service.mapper.Mapper;
-import com.vdgarcia.repairShop_service.model.dto.ClienteDTO;
 import com.vdgarcia.repairShop_service.model.dto.OrdenServicioDTO;
 import com.vdgarcia.repairShop_service.model.dto.VehiculoDTO;
 import com.vdgarcia.repairShop_service.model.entity.Cliente;

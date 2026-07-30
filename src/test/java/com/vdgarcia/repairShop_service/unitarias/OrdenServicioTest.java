@@ -1,4 +1,4 @@
-package com.vdgarcia.repairShop_service.integration;
+package com.vdgarcia.repairShop_service.unitarias;
 
 import com.vdgarcia.repairShop_service.model.dto.AgregarServicioDTO;
 import com.vdgarcia.repairShop_service.model.dto.CambiarEstadoDTO;
