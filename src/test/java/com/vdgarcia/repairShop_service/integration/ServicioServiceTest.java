@@ -12,6 +12,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
+import java.util.ArrayList;
 import java.util.List;
 
 @SpringBootTest
@@ -47,20 +48,15 @@ public class ServicioServiceTest {
         assertEquals(3,lista.size());
     }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+    @Test
+    @Transactional
+    void testCrear(){
+        ServicioDTO dto = new ServicioDTO(null,"Autolavado",BigDecimal.valueOf(120),1,new ArrayList<>());
+        ServicioDTO creado = this.service.crear(dto);
+        assertNotNull(creado);
+        assertEquals("Autolavado", creado.getNombre());
+        assertEquals(1,creado.getDuracionHoras());
+    }
 
 
 }
