@@ -66,7 +66,7 @@ public class OrdenController {
     }
 
 
-    @PutMapping("/{id}cambiar")
+    @PutMapping("/{id}/cambiar")
     @Operation(summary = "Cambia el estado de una orden", description = "Cambia el estado de una orden.")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "201", description = "Estado actualizado con éxito"),

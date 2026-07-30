@@ -10,13 +10,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.transaction.annotation.Transactional;
-
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
+
 
 @SpringBootTest
 @ActiveProfiles("test")
@@ -30,7 +30,7 @@ public class OrdenServiceTest {
     void testObtenerPorId(){
         OrdenServicioDTO dto = this.service.obtenerPorId(1L);
         assertNotNull(dto);
-        assertEquals(Estado.RECIBIDA,dto.getEstado());
+        assertEquals(Estado.ENTREGADA,dto.getEstado());
         assertEquals(BigDecimal.valueOf(5000.00),dto.getSubtotal().setScale(1, RoundingMode.HALF_UP));
     }
 
@@ -67,7 +67,7 @@ public class OrdenServiceTest {
     void testCrear_FirstException(){
         DateTimeFormatter formato = DateTimeFormatter.ofPattern("dd-MM-yy");
         LocalDate fechaIngreso = LocalDate.parse("30-07-26",formato);
-        OrdenServicioDTO dto = new OrdenServicioDTO(null,fechaIngreso,null,Estado.RECIBIDA,null,null,null,1L,new ArrayList<>());
+        OrdenServicioDTO dto = new OrdenServicioDTO(null,fechaIngreso,null,Estado.RECIBIDA,null,null,null,2L,new ArrayList<>());
         RuntimeException exception = assertThrows(RuntimeException.class, ()-> this.service.crear(dto));
         assertEquals("El vehículo cuente actualmente con una orden activa en estado: " + dto.getEstado(), exception.getMessage());
     }
@@ -77,7 +77,7 @@ public class OrdenServiceTest {
     @Transactional
     void testAgregarServicio(){
         AgregarServicioDTO agregarServicioDTO = new AgregarServicioDTO(1L,2);
-        OrdenServicioDTO dto = this.service.agregarServicio(1L,agregarServicioDTO);
+        OrdenServicioDTO dto = this.service.agregarServicio(2L,agregarServicioDTO);
         assertNotNull(dto);
         assertTrue(dto.getSubtotal().compareTo(BigDecimal.valueOf(0))>0);
     }
@@ -85,8 +85,46 @@ public class OrdenServiceTest {
     @Test
     @Transactional
     void testAgregarServicio_FirstException(){
-
+        AgregarServicioDTO agregarServicioDTO = new AgregarServicioDTO(1L,2);
+        RuntimeException exception = assertThrows(RuntimeException.class, ()-> this.service.agregarServicio(5L,agregarServicioDTO));
+        assertEquals("Orden no encontrada", exception.getMessage());
     }
+
+    @Test
+    @Transactional
+    void testAgregarServicio_SecondException(){
+        AgregarServicioDTO agregarServicioDTO = new AgregarServicioDTO(1L,2);
+        IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, ()-> this.service.agregarServicio(1L,agregarServicioDTO));
+        assertEquals("La orden ya no puede ser modificada", exception.getMessage());
+    }
+
+
+    @Test
+    @Transactional
+    void testAgregarServicio_ThirdException(){
+        AgregarServicioDTO dto = new AgregarServicioDTO(1L,0);
+        IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, ()->this.service.agregarServicio(2L,dto));
+        assertEquals("La cantidad debe ser mayor a cero",exception.getMessage());
+    }
+
+    @Test
+    @Transactional
+    void testAgregarServicio_FourthException(){
+        AgregarServicioDTO dto = new AgregarServicioDTO(9L,8);
+        IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, ()->this.service.agregarServicio(2l,dto));
+        assertEquals("Servicio no encontrado", exception.getMessage());
+    }
+
+
+
+
+
+
+
+
+
+
+
 
 
 
