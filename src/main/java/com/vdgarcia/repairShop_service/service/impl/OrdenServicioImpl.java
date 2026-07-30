@@ -48,7 +48,6 @@ public class OrdenServicioImpl implements OrdenServicioService {
 
     @Override
     public OrdenServicioDTO crear(OrdenServicioDTO dto) {
-      //  Vehiculo vehiculo = Mapper.tovehiculo(vehiculoService.obtenerPorId(dto.getVehiculo()));
         Optional<OrderServicio> optional = repository.findFirstByVehiculoIdAndEstadoIn(
                 dto.getVehiculo(),
                 List.of(
